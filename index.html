@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bring Data · Sistemas de inteligência artificial para a Câmara Municipal</title>
+<meta name="description" content="Atendimento da Câmara no WhatsApp, no site e no telefone, ouvidoria e e-SIC com o prazo da lei, ata da sessão, redação legislativa e assistente do servidor, com revisão de quem assina.">
+<link rel="icon" href="assets/icone-app-escuro.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script>
+  // Esconde os estados iniciais só quando a animação vai rodar; se o GSAP não carregar, a página aparece inteira.
+  try{document.documentElement.classList.add(sessionStorage.getItem('bdSeen')?'no-pl':'pl-on')}catch(e){document.documentElement.classList.add('pl-on')}
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('motion');setTimeout(()=>{if(!window.gsap)document.documentElement.classList.remove('motion')},3000)}
+</script>
+<style>
+:root{
+  /* Identidade BringData (Figma) */
+  --black:#000; --ink:#050507; --navy-950:#020609; --navy-900:#06101C; --navy-700:#144269;
+  --blue-400:#90BBDD; --blue-100:#D8E7F2; --ice:#F2F7FA; --white:#fff;
+  --text:#F2F7FA; --muted:rgba(242,247,250,.62); --dim:rgba(242,247,250,.42);
+  --line:rgba(216,231,242,.10); --line-2:rgba(216,231,242,.18);
+  --card:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+  --grad-brand:linear-gradient(180deg,#F2F7FA 0%,#90BBDD 100%);
+  --radius:20px; --max:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:Sora,system-ui,sans-serif;font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--blue-400);outline-offset:3px;border-radius:8px}
+.wrap{width:min(var(--max),100% - 48px);margin-inline:auto}
+h1,h2,h3{font-weight:400;letter-spacing:-.035em;line-height:1.12}
+h2{font-size:clamp(32px,4.4vw,52px)}
+h3{font-size:20px;letter-spacing:-.02em}
+.grad-text{background:linear-gradient(180deg,#F2F7FA 10%,#90BBDD 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border:1px solid var(--line-2);border-radius:99px;background:rgba(255,255,255,.03);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.pill img{width:16px;height:15px}
+.tag{align-self:flex-start;display:inline-block;padding:4px 10px;border-radius:99px;background:rgba(144,187,221,.1);border:1px solid rgba(144,187,221,.2);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-400)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 24px;border:1px solid transparent;border-radius:99px;font-weight:500;font-size:14px;line-height:1.2;white-space:nowrap;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-light{background:var(--grad-brand);color:var(--navy-900);box-shadow:0 0 0 1px rgba(255,255,255,.4) inset,0 10px 40px -10px rgba(144,187,221,.6)}
+.btn-light:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,255,255,.6) inset,0 16px 50px -10px rgba(144,187,221,.8)}
+.btn-ghost{border:1px solid var(--line-2);color:var(--text);background:rgba(255,255,255,.03)}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+.btn-dark{background:var(--navy-900);color:var(--ice)}
+.btn-dark:hover{transform:translateY(-2px);background:var(--navy-700)}
+
+.nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(0,0,0,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px;gap:24px}
+.nav .logo{flex:none}
+.nav .logo img{height:26px;width:auto;max-width:none}
+@media(max-width:480px){.nav .logo img{height:22px}}
+.nav ul{display:flex;gap:32px;list-style:none;font-size:14px;color:var(--muted)}
+.nav ul a:hover{color:var(--text)}
+.nav .btn{padding:10px 20px}
+@media(max-width:820px){.nav nav{display:none}}
+@media(max-width:480px){.nav .btn span{display:none}}
+@media(max-width:360px){.nav .wrap{gap:16px}.nav .btn{padding:9px 14px;font-size:13px}}
+
+/* Hero */
+.hero{position:relative;min-height:100vh;padding:150px 0 90px;text-align:center;overflow:hidden;isolation:isolate}
+.hero-wave{position:absolute;z-index:-2;width:min(900px,70vw);aspect-ratio:1;top:-8%;opacity:.85;mask-image:radial-gradient(closest-side,#000 50%,transparent 100%);-webkit-mask-image:radial-gradient(closest-side,#000 50%,transparent 100%)}
+.hero-wave.r{right:-22%}
+.hero-wave.l{left:-22%;transform:scaleX(-1)}
+.hero::before{content:"";position:absolute;z-index:-1;inset:0;background:radial-gradient(60% 50% at 50% 38%,transparent 0%,rgba(0,0,0,.55) 60%,#000 100%),linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 30%,transparent 70%,#000 100%)}
+.hero::after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:0;height:45%;background:repeating-linear-gradient(90deg,rgba(216,231,242,.05) 0 1px,transparent 1px 64px);mask-image:linear-gradient(180deg,transparent,#000 40%,transparent);-webkit-mask-image:linear-gradient(180deg,transparent,#000 40%,transparent);transform:perspective(600px) rotateX(55deg);transform-origin:bottom}
+.hero h1{font-size:clamp(25px,4vw,54px);line-height:1.12;max-width:31ch;margin:26px auto 22px;text-wrap:balance}
+.hero .lead{max-width:560px;margin:0 auto 36px;color:var(--muted);font-size:clamp(15px,1.6vw,18px)}
+.hero-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-icon{width:96px;height:96px;margin:64px auto 0;border-radius:26px;padding:3px;background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,.04));box-shadow:0 0 80px 10px rgba(144,187,221,.25),0 30px 60px -20px #000;position:relative;z-index:2}
+.hero-icon img{width:100%;height:100%;border-radius:23px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:150px;padding-top:28px;font-size:14px;color:var(--muted);position:relative;z-index:2}
+.chips a{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border:1px solid var(--line);border-radius:99px;background:rgba(6,16,28,.7);transition:color .3s,border-color .3s,background .3s,box-shadow .3s}
+.chips a.lit{border-color:rgba(144,187,221,.55);background:rgba(20,66,105,.45);box-shadow:0 0 22px -8px rgba(144,187,221,.8)}
+.chips a:hover,.chips a.lit{color:var(--text)}
+.chips a::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue-400);box-shadow:0 0 10px var(--blue-400);transition:transform .3s}
+.chips a.lit::before{transform:scale(1.8)}
+
+section{position:relative}
+.sec{padding:130px 0}
+.sec-head{text-align:center;max-width:720px;margin:0 auto 60px}
+.sec-head h2{margin:22px 0 16px}
+.sec-head p{color:var(--muted)}
+
+.card{position:relative;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);padding:28px;overflow:hidden}
+
+/* Sistemas: bento com o vídeo de cada um */
+.bento{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.sys{display:flex;flex-direction:column;gap:14px;scroll-margin-top:100px}
+.sys.full{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.35fr;gap:18px 40px;align-items:center}
+.sys.full .sys-copy{display:flex;flex-direction:column;gap:14px}
+.sys-num{font-size:12px;letter-spacing:.14em;color:var(--dim)}
+.sys-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sys h3{margin-top:2px}
+.sys p.lead-s{color:var(--muted);font-size:14.5px}
+.sys ul{list-style:none;display:grid;gap:8px;font-size:14px;color:var(--muted)}
+.sys li{position:relative;padding-left:20px}
+.sys li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:2px;background:var(--grad-brand);transform:rotate(45deg) scale(.75)}
+details{border-top:1px solid var(--line);padding-top:12px;font-size:14px}
+details summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;color:var(--blue-100);font-weight:400}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-size:20px;font-weight:300;transition:transform .25s;color:var(--blue-400)}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);padding-top:10px}
+@media(max-width:900px){.bento{grid-template-columns:1fr}.sys.full{grid-template-columns:1fr}}
+
+/* Prazos */
+.deadline{position:relative;border-radius:28px;overflow:hidden;border:1px solid var(--line);background:#050507;display:grid;grid-template-columns:1fr 1fr;min-height:380px}
+.deadline .art{position:relative;background:url(assets/curva-resultado.jpg) center/cover no-repeat}
+.deadline .art::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#050507 0%,transparent 35%)}
+.deadline .txt{padding:56px;display:flex;flex-direction:column;justify-content:center;gap:28px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.stat strong{display:block;font-size:clamp(48px,6vw,72px);font-weight:300;letter-spacing:-.05em;line-height:1;background:linear-gradient(90deg,#fff,#3f3f3f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat strong b{font-weight:300}.stat strong em{font-style:normal;font-size:.36em;letter-spacing:-.02em}
+.stat > span{display:block;margin-top:10px;font-size:14px;color:var(--muted)}
+@media(max-width:860px){.deadline{grid-template-columns:1fr}.deadline .art{min-height:220px;order:-1}.deadline .art::after{background:linear-gradient(0deg,#050507,transparent 50%)}.deadline .txt{padding:36px 28px}}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid var(--line-2);margin-bottom:22px;color:var(--blue-100)}
+.feat .ico svg{width:24px;height:24px}
+.feat h3{margin-bottom:12px}
+.feat p{color:var(--muted);font-size:14.5px}
+.feat .btn{margin-top:22px}
+@media(max-width:900px){.grid3{grid-template-columns:1fr}.grid3 .feat{grid-column:auto!important}}
+
+.about{display:grid;grid-template-columns:1.05fr 1fr;gap:16px;align-items:stretch}
+.about-art{position:relative;border-radius:var(--radius);overflow:hidden;min-height:420px;background:#000;border:1px solid var(--line)}
+.about-art .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ribbon{display:block;opacity:0;transition:opacity 1.2s}.ribbon.on{opacity:1}.hero-wave.ribbon.on{opacity:.85}
+.about-art .sig{position:absolute;left:32px;bottom:32px;right:32px}
+.about-art .sig img{width:64px;height:60px;margin-bottom:22px}
+.about-art .sig p{font-size:24px;letter-spacing:-.03em;line-height:1.2;max-width:14ch}
+.about .card h2{margin:18px 0 18px;font-size:clamp(28px,3.4vw,40px)}
+.about .card > p{color:var(--muted)}
+.founder{display:flex;align-items:center;gap:14px;margin:26px 0;padding:14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--grad-brand);color:var(--navy-900);font-weight:600;flex:none}
+.founder b{font-weight:500;display:block}
+.founder span:not(.avatar){font-size:13px;color:var(--dim)}
+.certs{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.certs li{padding:7px 12px;border-radius:99px;border:1px solid var(--line-2);font-size:12.5px;color:var(--muted)}
+.support{font-size:13.5px;color:var(--muted);margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+@media(max-width:900px){.about{grid-template-columns:1fr}.about-art{min-height:340px}}
+
+.faq{max-width:820px;margin:0 auto;display:grid;gap:10px}
+.faq details{border:1px solid var(--line);border-radius:16px;padding:20px 24px;background:var(--card);font-size:15px}
+.faq details summary{font-size:16px;gap:20px;color:var(--text)}
+.faq details[open]{border-color:var(--line-2)}
+
+.cta{position:relative;overflow:hidden;background:linear-gradient(180deg,#F2F7FA 0%,#90BBDD 100%);color:var(--navy-900);text-align:center;padding:120px 0 0;isolation:isolate}
+.cta::before{content:"";position:absolute;z-index:-1;inset:-20% -10% auto;height:70%;background:radial-gradient(closest-side,rgba(255,255,255,.9),transparent);filter:blur(20px)}
+.cta .logo-dark{height:44px;width:auto;margin:0 auto 34px}
+.cta h2{font-size:clamp(34px,4.6vw,56px);max-width:16ch;margin:0 auto 18px}
+.cta p{max-width:600px;margin:0 auto;color:rgba(6,16,28,.72)}
+.cta-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:34px 0 18px}
+.cta .btn-outline{border:1px solid rgba(6,16,28,.25);color:var(--navy-900);background:rgba(255,255,255,.35)}
+.cta .btn-outline:hover{background:rgba(255,255,255,.6)}
+.cta small{display:block;font-size:13.5px;color:rgba(6,16,28,.65)}
+.cta small a{text-decoration:underline;text-underline-offset:3px}
+.cta-hand{width:min(720px,100%);margin:-4% auto 0;position:relative;z-index:-1;mask-image:linear-gradient(180deg,transparent 0%,#000 22%);-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 22%);mix-blend-mode:multiply}
+
+footer{position:relative;padding:90px 0 36px;border-top:1px solid var(--line);font-size:14px;color:var(--dim);background:radial-gradient(80% 60% at 50% 100%,rgba(20,66,105,.35),transparent 70%)}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1.2fr;gap:48px}
+.foot-brand img{height:26px;width:auto}
+.foot-brand p{margin:14px 0 26px;color:var(--muted)}
+.foot-col{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.foot-col h3{margin:0 0 6px;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-400)}
+.foot-col a{color:var(--muted);transition:color .25s,translate .25s}
+.foot-col a:hover{color:var(--text);translate:3px 0}
+.foot-mark{margin:80px 0 28px;aspect-ratio:121/26;width:100%;-webkit-mask:url(assets/logo-branca.svg) center/contain no-repeat;mask:url(assets/logo-branca.svg) center/contain no-repeat;background:linear-gradient(100deg,rgba(242,247,250,.05) 0 38%,rgba(144,187,221,.55) 48%,rgba(242,247,250,.9) 50%,rgba(144,187,221,.55) 52%,rgba(242,247,250,.05) 62% 100%);background-size:300% 100%;animation:markShine 9s ease-in-out infinite}
+@keyframes markShine{0%{background-position:100% 0}60%,100%{background-position:0 0}}
+.foot-legal{display:flex;justify-content:space-between;gap:24px;padding-top:24px;border-top:1px solid var(--line);font-size:12.5px}
+.foot-legal p{margin:0;max-width:52ch}
+@media(max-width:760px){.foot-grid{grid-template-columns:auto 1fr;gap:36px 40px}.foot-brand{grid-column:1/-1}.foot-legal{flex-direction:column}footer{padding-top:64px}.foot-mark{margin-top:56px}}
+@media(prefers-reduced-motion:reduce){.foot-mark{animation:none;background:rgba(242,247,250,.08)}}
+
+.wa{position:fixed;right:22px;bottom:22px;z-index:60;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--grad-brand);color:var(--navy-900);box-shadow:0 12px 40px -8px rgba(144,187,221,.7);transition:transform .2s}
+.wa:hover{transform:scale(1.07)}
+.wa svg{width:26px;height:26px}
+</style>
+<link rel="stylesheet" href="css/motion.css?v=19">
+<link rel="stylesheet" href="css/scenes.css?v=19">
+</head>
+<body id="top">
+<div id="preloader" data-logo="assets/icone-azul-claro.svg" aria-hidden="true"><canvas></canvas><img src="assets/icone-azul-claro.svg" alt="" width="64" height="60"></div>
+<script src="js/preloader.js?v=19"></script>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="Bring Data, início"><img src="assets/logo-branca.svg" alt="Bring Data" width="121" height="26"></a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#sistemas">Sistemas</a></li>
+        <li><a href="#contratar">Contratação</a></li>
+        <li><a href="#perguntas">Perguntas</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-light" href="https://calendar.app.google/11UW4wZ4thrgqu1S8" target="_blank" rel="noopener">Agendar conversa <span>de 20 minutos</span></a>
+  </div>
+</header>
+
+<main>
+<!-- HERO: os 5 sistemas enviam dados até a IA da Bring Data -->
+<section class="hero" id="hero">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <canvas class="hero-wave l ribbon" data-ribbon data-speed="0.9" aria-hidden="true"></canvas>
+  <canvas class="hero-wave r ribbon" data-ribbon data-speed="0.75" aria-hidden="true"></canvas>
+  <svg class="flow" aria-hidden="true"></svg>
+  <div class="wrap">
+    <span class="pill"><img src="assets/icone-azul-claro.svg" alt="" width="16" height="15">Para a Câmara Municipal</span>
+    <h1 data-words data-loop>A inteligência artificial da Bring Data <span class="grad-text">atende o cidadão</span> e prepara a primeira versão dos documentos da Câmara.</h1>
+    <p class="lead">A gestão atual passa a responder ao cidadão na hora, no WhatsApp, com o documento da própria Câmara.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-light" href="https://calendar.app.google/11UW4wZ4thrgqu1S8" target="_blank" rel="noopener">Agendar conversa de 20 minutos</a>
+      <a class="btn btn-ghost" href="#sistemas">Ver os sistemas</a>
+    </div>
+    <div class="hero-icon"><span class="ring"></span><span class="ring"></span><img src="assets/icone-app-escuro.svg" alt="" width="451" height="451"></div>
+    <nav class="chips" aria-label="Sistemas">
+      <a href="#atendimento">Atendimento no WhatsApp, no site e no telefone</a>
+      <a href="#ouvidoria">Ouvidoria e e-SIC</a>
+      <a href="#ata">Ata da sessão</a>
+      <a href="#redacao">Redação legislativa</a>
+      <a href="#assistente">Assistente do servidor</a>
+    </nav>
+  </div>
+</section>
+
+<!-- SISTEMAS -->
+<section class="sec" id="sistemas">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="pill"><img src="assets/icone-azul-claro.svg" alt="" width="16" height="15">Sistemas</span>
+      <h2 data-words data-loop>Cinco sistemas para a Câmara Municipal</h2>
+    </div>
+
+    <div class="bento">
+      <!-- 01 Atendimento -->
+      <article class="card beam sys reveal" id="atendimento">
+        <div class="sys-head"><span class="tag">Presidência e secretaria</span><span class="sys-num">01</span></div>
+        <h3>Atendimento da Câmara no WhatsApp, no site e no telefone</h3>
+        <p class="lead-s">Responde ao cidadão com os documentos da própria Câmara.</p>
+        <div class="demo" data-cover="atendimento" aria-hidden="true"></div>
+        <button class="watch" type="button" data-video="atendimento_2026-11-16_fala" data-label="Vídeo: um cidadão pergunta pelo WhatsApp quando é a próxima sessão e o que está na pauta, o assistente responde com os documentos da Câmara, e a mesma pergunta chega por telefone e recebe a resposta em voz."><span class="play" aria-hidden="true"></span><span><small>Assistir ao vídeo · 1:00</small>A resposta sai dos documentos da Câmara</span></button>
+        <ul>
+          <li>Responde sobre sessões, pauta, projetos, vereadores, horários e serviços.</li>
+          <li>No telefone, a mesma resposta sai por voz.</li>
+          <li>A recepção fica livre para quem está na Câmara.</li>
+        </ul>
+      </article>
+
+      <!-- 02 Ouvidoria -->
+      <article class="card beam sys reveal" id="ouvidoria">
+        <div class="sys-head"><span class="tag">Ouvidoria e presidência</span><span class="sys-num">02</span></div>
+        <h3>Ouvidoria e e-SIC da Câmara</h3>
+        <p class="lead-s">O atendimento tira dúvida na hora, e a ouvidoria registra o pedido formal com protocolo e o prazo da lei.</p>
+        <div class="demo" data-cover="ouvidoria" aria-hidden="true"></div>
+        <button class="watch" type="button" data-video="ouvidoria_2026-11-16_fala" data-label="Vídeo: uma cidadã pergunta pelo WhatsApp quanto a Câmara gastou com diárias de vereador e recebe a resposta na hora, com o lugar onde o dado já está publicado. Depois ela pede um laudo que não está publicado, e o pedido vira formal, com protocolo e o prazo da lei contado até a resposta do servidor responsável."><span class="play" aria-hidden="true"></span><span><small>Assistir ao vídeo · 1:09</small>A cidadã pergunta às onze da noite</span></button>
+        <ul>
+          <li>Vale para reclamação, denúncia e pedido de informação da Lei 12.527/2011.</li>
+          <li>O cidadão recebe o protocolo pelo WhatsApp e acompanha o andamento na mesma conversa.</li>
+          <li>Quando a informação já está publicada, a resposta sai na hora, com o lugar onde ela está.</li>
+          <li>Quando não está, o caso vai ao servidor responsável, com aviso antes de o prazo vencer.</li>
+        </ul>
+        <details>
+          <summary>Os prazos da lei</summary>
+          <p>A Lei 12.527/2011, a Lei de Acesso à Informação, vale para o pedido de informação, e a Lei 13.460/2017 vale para a ouvidoria. O sistema conta o prazo da lei de cada protocolo. O canal recebe a reclamação e o pedido de informação 24 horas por dia, e a ouvidoria recebe um relatório por mês.</p>
+        </details>
+      </article>
+
+      <!-- 03 Ata -->
+      <article class="card beam sys reveal" id="ata">
+        <div class="sys-head"><span class="tag">Secretaria legislativa</span><span class="sys-num">03</span></div>
+        <h3>Ata da sessão</h3>
+        <p class="lead-s">Transcreve o áudio da sessão e escreve a minuta da ata.</p>
+        <div class="demo" data-cover="ata" aria-hidden="true"></div>
+        <button class="watch" type="button" data-video="ata_versao_b_2026-11-16_fala" data-label="Vídeo: a sessão de terça termina às dez e cinco da noite, e o servidor envia o áudio antes de sair. A inteligência artificial transcreve a sessão com o nome de quem falou e escreve a minuta da ata, com o minuto da gravação em cada votação. O servidor confere um voto ouvindo só o trecho marcado, acrescenta o vereador que chegou depois da chamada, e a ata segue para a assinatura."><span class="play" aria-hidden="true"></span><span><small>Assistir ao vídeo · 0:59</small>A sessão escrita, pronta para consulta</span></button>
+        <ul>
+          <li>Geralmente, um servidor ouve a gravação inteira para escrever a ata.</li>
+          <li>O sistema recebe o áudio e transcreve a sessão.</li>
+          <li>O áudio pode vir da sessão que a Câmara transmite no YouTube.</li>
+          <li>O servidor revisa a minuta antes de assinar e publicar.</li>
+        </ul>
+      </article>
+
+      <!-- 04 Redação -->
+      <article class="card beam sys reveal" id="redacao">
+        <div class="sys-head"><span class="tag">Gabinetes e assessoria jurídica</span><span class="sys-num">04</span></div>
+        <h3>Redação legislativa para os vereadores</h3>
+        <p class="lead-s">Escreve a primeira versão a partir do pedido do gabinete.</p>
+        <div class="demo" data-cover="redacao" aria-hidden="true"></div>
+        <button class="watch" type="button" data-video="redacao_2026-11-16_fala" data-label="Vídeo: o assessor de um gabinete escreve o pedido do vereador numa conversa, até com um erro de digitação, e o assistente prepara, no modelo que a Câmara já usa, a minuta de um requerimento que pede ao órgão competente o cronograma e o contrato do conserto de uma rua. O assessor completa a justificativa antes de protocolar."><span class="play" aria-hidden="true"></span><span><small>Assistir ao vídeo · 0:53</small>O assessor pede como quem conversa</span></button>
+        <ul>
+          <li>Vale para projeto de lei, requerimento, indicação e ofício.</li>
+          <li>O vereador ou o assessor descreve o que precisa.</li>
+          <li>O gabinete do vereador revisa cada minuta.</li>
+        </ul>
+        <details>
+          <summary>Mais detalhes</summary>
+          <p>Hoje, no gabinete, o assessor pega o modelo da Câmara de projeto de lei, requerimento, indicação ou ofício e preenche na mão, pedido por pedido. O assistente escreve a primeira versão no modelo que a Câmara já usa, e o gabinete revisa. A Lei Complementar 95/1998 trata da redação das leis.</p>
+        </details>
+      </article>
+
+      <!-- 05 Assistente -->
+      <article class="card beam sys full reveal" id="assistente">
+        <div class="sys-copy">
+          <div class="sys-head"><span class="tag">Servidores e procuradoria</span><span class="sys-num">05</span></div>
+          <h3>Assistente do servidor da Câmara</h3>
+          <p class="lead-s">Aponta vício de iniciativa e projeto parecido, com o artigo citado. Escreve no modelo da Câmara, com os dados sob o contrato dela.</p>
+          <ul>
+            <li>Vale para projeto de lei, parecer, ofício, resposta de e-SIC e resumo de processo.</li>
+            <li>O servidor revisa o texto antes de assinar.</li>
+          </ul>
+          <button class="watch" type="button" data-video="assistente_2026-11-16_fala" data-label="Vídeo: o servidor pede um projeto de lei com pressa e com erro de digitação, e o assistente avisa que a Câmara já tem um projeto parecido e aponta o vício de iniciativa pela lei orgânica. A minuta sai no modelo da Câmara, e o servidor revisa e acrescenta a coautoria de uma vereadora antes de protocolar."><span class="play" aria-hidden="true"></span><span><small>Assistir ao vídeo · 0:48</small>O pedido chega com pressa</span></button>
+        </div>
+        <div class="demo" data-cover="assistente" aria-hidden="true"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRATAÇÃO -->
+<section class="sec" id="contratar" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="pill"><img src="assets/icone-azul-claro.svg" alt="" width="16" height="15">Contratação</span>
+      <h2 data-words data-loop>O que a Câmara precisa saber para contratar</h2>
+    </div>
+
+    <div class="deadline reveal" id="prazos">
+      <div class="txt">
+        <h3 style="font-size:28px">Os prazos da lei em dia</h3>
+        <div class="stats">
+          <div class="stat"><strong><b data-count="20">20</b> <em>dias</em></strong><span class="ticks" data-ticks="20" aria-hidden="true"></span><span>prorrogáveis por 10, para o pedido de informação (Lei 12.527/2011).</span></div>
+          <div class="stat"><strong><b data-count="30">30</b> <em>dias</em></strong><span class="ticks" data-ticks="30" aria-hidden="true"></span><span>prorrogáveis por 30, para a ouvidoria (Lei 13.460/2017).</span></div>
+        </div>
+        <p style="color:var(--muted)">O sistema conta os dois prazos.</p>
+      </div>
+      <div class="art" role="img" aria-label="Curva de luz azul subindo"></div>
+    </div>
+
+    <div class="grid3" style="margin-top:16px">
+      <article class="card beam feat reveal" style="grid-column:span 2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 10 12 4l9 6M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 20h18"/></svg></div>
+        <h3>Com o orçamento do Legislativo</h3>
+        <p>A Câmara contrata com o próprio orçamento. A contratação pode ser por dispensa de licitação por valor, na Lei 14.133/2021, art. 75, inciso II. A implantação entra no valor anual, sem taxa à parte. Cada sistema já vem com o curso de treinamento de como usar, dentro da implantação. A Bring Data coloca no sistema, sem custo à parte, os documentos que a Câmara já publica.</p>
+      </article>
+      <article class="card beam feat reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></div>
+        <h3>O próximo passo</h3>
+        <p>Uma conversa de 20 minutos, no horário que a Câmara escolher.</p>
+        <a class="btn btn-light" href="https://calendar.app.google/11UW4wZ4thrgqu1S8" target="_blank" rel="noopener">Agendar conversa</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- QUEM DESENVOLVE -->
+<section class="sec" style="padding-top:40px">
+  <div class="wrap about">
+    <div class="about-art reveal">
+      <img class="bg ribbon-fallback" src="assets/onda-azul-2.png" alt="" loading="lazy">
+      <canvas class="bg ribbon" data-ribbon aria-hidden="true"></canvas>
+      <div class="sig">
+        <img src="assets/icone-azul-claro.svg" alt="" width="64" height="60">
+        <p>Belo Horizonte, Minas Gerais</p>
+      </div>
+    </div>
+    <div class="card beam reveal">
+      <span class="pill"><img src="assets/icone-azul-claro.svg" alt="" width="16" height="15">Sobre</span>
+      <h2 data-words data-loop>Quem desenvolve os sistemas</h2>
+      <p>A Bring Data fica em Belo Horizonte, Minas Gerais, e desenvolve sistemas para empresas de educação, clínicas de estética, institutos de pesquisa e governo. Ramon Moreira Filho desenvolve os produtos como fundador e engenheiro de machine learning.</p>
+      <a class="founder" href="https://www.linkedin.com/in/ramon-moreira-filho" target="_blank" rel="noopener">
+        <span class="avatar" aria-hidden="true">RM</span>
+        <span><b>Ramon Moreira Filho</b><span>Fundador e engenheiro de machine learning · LinkedIn ↗</span></span>
+      </a>
+      <p style="font-size:13px;color:var(--dim)">Certificações:</p>
+      <ul class="certs">
+        <li>Stanford University: Machine Learning Specialization</li>
+        <li>Google Machine Learning Engineer Professional Certificate</li>
+        <li>IBM Databases and SQL for Data Science</li>
+        <li>Outras</li>
+      </ul>
+      <p class="support">Suporte por e-mail em dias úteis, das 9h às 17h (horário de Brasília), com resposta em até 3 horas úteis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="perguntas" style="padding-top:60px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="pill"><img src="assets/icone-azul-claro.svg" alt="" width="16" height="15">Perguntas</span>
+      <h2 data-words data-loop>Perguntas que a Câmara faz</h2>
+    </div>
+    <div class="faq reveal">
+      <details><summary>De onde vêm as respostas do atendimento?</summary><p>Dos documentos que a própria Câmara já publica, como a pauta, os projetos de lei e as informações de transparência.</p></details>
+      <details><summary>Quais prazos a ouvidoria e o e-SIC controlam?</summary><p>A Lei 12.527/2011 vale para o pedido de informação, e a Lei 13.460/2017 vale para a ouvidoria. O sistema conta o prazo da lei de cada protocolo e avisa o servidor responsável antes de vencer.</p></details>
+      <details><summary>O cidadão acompanha o andamento do pedido?</summary><p>Sim. O cidadão recebe o número de protocolo e o andamento do pedido pelo WhatsApp, na mesma conversa.</p></details>
+      <details><summary>Quem revisa os textos que os sistemas escrevem?</summary><p>A ata sai como minuta, e o servidor da secretaria legislativa revisa antes de assinar. Os documentos legislativos saem como primeira versão, e o gabinete do vereador revisa o texto. Parecer, ofício, resposta de e-SIC e resumo de processo também saem como primeira versão, e o servidor revisa antes de assinar.</p></details>
+      <details><summary>Quem na Câmara costuma se interessar por cada sistema?</summary><p>O atendimento interessa à presidência e à secretaria, e o atendimento por telefone interessa também à recepção. A ouvidoria e o e-SIC interessam à ouvidoria e à presidência. A ata da sessão interessa à secretaria legislativa, a redação legislativa interessa aos gabinetes dos vereadores e à assessoria jurídica, e o assistente do servidor interessa aos servidores e à procuradoria.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta" id="agendar">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap reveal">
+    <img class="logo-dark" src="assets/logo-azul-escura.svg" alt="Bring Data" width="205" height="44">
+    <h2 data-words data-loop>Agende uma conversa de 20 minutos</h2>
+    <p>Na conversa, Ramon entende como a Câmara atende o cidadão hoje e quais documentos ela já publica. Depois, a Câmara recebe uma proposta por escrito.</p>
+    <div class="cta-btns">
+      <a class="btn btn-dark" href="https://calendar.app.google/11UW4wZ4thrgqu1S8" target="_blank" rel="noopener">Agendar conversa de 20 minutos</a>
+      <a class="btn btn-outline" href="https://wa.me/5537999610179?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20conversa%20de%2020%20minutos%20sobre%20os%20sistemas%20para%20a%20C%C3%A2mara." target="_blank" rel="noopener">Agendar pelo WhatsApp</a>
+    </div>
+    <small>Escolha o melhor horário para a Câmara. Ou escreva para <a href="mailto:sales@bring-data.com">sales@bring-data.com</a>, e respondemos em até 3 horas úteis.</small>
+  </div>
+  <img class="cta-hand" src="assets/mao-robo.jpg" alt="" loading="lazy" width="2000" height="1125">
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-branca.svg" alt="Bring Data" width="121" height="26">
+        <p>Belo Horizonte, Minas Gerais</p>
+        <a class="btn btn-light" href="https://calendar.app.google/11UW4wZ4thrgqu1S8" target="_blank" rel="noopener">Agendar conversa de 20 minutos</a>
+      </div>
+      <nav class="foot-col" aria-label="Página">
+        <h3>Página</h3>
+        <a href="#sistemas">Sistemas</a>
+        <a href="#contratar">Contratação</a>
+        <a href="#perguntas">Perguntas</a>
+      </nav>
+      <div class="foot-col">
+        <h3>Contato</h3>
+        <a href="mailto:sales@bring-data.com">sales@bring-data.com</a>
+        <a href="https://wa.me/5537999610179" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://www.linkedin.com/in/ramon-moreira-filho" target="_blank" rel="noopener">Ramon Moreira Filho no LinkedIn</a>
+      </div>
+    </div>
+    <div class="foot-mark" aria-hidden="true"></div>
+    <div class="foot-legal">
+      <p>A Bring Data é operada pela Bring Data LTDA, CNPJ 33.947.215/0001-73, Belo Horizonte, Minas Gerais.</p>
+      <p>As telas e conversas desta página são demonstrações com Câmaras de exemplo e dados fictícios.</p>
+    </div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/5537999610179?text=Ol%C3%A1%2C%20quero%20agendar%20uma%20conversa%20de%2020%20minutos%20sobre%20os%20sistemas%20para%20a%20C%C3%A2mara." target="_blank" rel="noopener" aria-label="Agendar pelo WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.3-.4.8-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
+</a>
+
+<dialog class="vmodal" id="vmodal" aria-label="Vídeo de demonstração">
+  <button class="vclose" type="button" aria-label="Fechar vídeo">×</button>
+  <video controls playsinline></video>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="js/ribbon.js?v=19" defer></script>
+<script src="js/scenes.js?v=19" defer></script>
+<script src="js/covers.js?v=19" defer></script>
+<script src="js/motion.js?v=19" defer></script>
+</body>
+</html>

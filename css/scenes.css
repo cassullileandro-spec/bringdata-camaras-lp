@@ -1,0 +1,112 @@
+/* Cenas próprias do bento (js/scenes.js). Cada sistema tem um visual diferente. */
+.sc-stage{position:absolute;inset:14px;z-index:1;font-size:10.5px;line-height:1.4;color:var(--text)}
+.sc{height:100%;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.sc-card{background:rgba(6,16,28,.6);border:1px solid rgba(216,231,242,.14);border-radius:14px;padding:10px 12px;box-shadow:0 20px 40px -20px #000}
+.sc-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sc-row time{color:var(--dim);font-size:9px;font-variant-numeric:tabular-nums}
+.sc-chip{display:inline-flex;padding:2px 8px;border-radius:99px;border:1px solid rgba(144,187,221,.35);color:var(--blue-100);font-size:8.5px;white-space:nowrap;transition:background .3s,color .3s}
+.sc-chip.ok{background:var(--ice);border-color:var(--ice);color:#06101C}
+.sc-who{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:9.5px}
+.sc-av{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--ice);color:#144269;font-size:8px;font-weight:600}
+.sc-quote{margin:0;min-height:2.9em;font-size:11px}
+.sc .typing::after{content:"";display:inline-block;width:1px;height:1em;margin-left:1px;vertical-align:-2px;background:var(--blue-400);animation:blink 1s steps(1) infinite}
+
+/* Ouvidoria: protocolo + prazo da lei */
+.sc-ouv{grid-template-columns:1.15fr 1fr;align-items:center}
+.sc-ticket{display:flex;flex-direction:column;gap:9px}
+.sc-proto{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(144,187,221,.1);border:1px dashed rgba(144,187,221,.45);color:var(--muted)}
+.sc-proto b{color:var(--text);font-size:14px;font-weight:500;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.sc-side{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.sc-gauge{position:relative;width:min(108px,52%);aspect-ratio:1}
+.sc-gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.sc-gauge .trk{fill:none;stroke:rgba(216,231,242,.12);stroke-width:7}
+.sc-gauge .arc{fill:none;stroke:#90BBDD;stroke-width:7;stroke-linecap:round;filter:drop-shadow(0 0 5px rgba(144,187,221,.7))}
+.sc-gtext{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.sc-gtext b{display:inline-block;font-size:24px;font-weight:500;font-variant-numeric:tabular-nums}
+.sc-gtext span{font-size:8.5px;color:var(--muted)}
+.sc-steps{list-style:none;margin:0;padding:0;display:grid;gap:6px;width:100%}
+.sc-steps li::before{content:none}
+.sc-steps li{padding:0;display:flex;align-items:center;gap:7px;color:var(--dim);font-size:9.5px;transition:color .3s}
+.sc-steps i{width:11px;height:11px;flex:none;border-radius:50%;border:1.5px solid rgba(216,231,242,.25);transition:background .3s,border-color .3s,box-shadow .3s}
+.sc-steps li.on{color:var(--text)}
+.sc-steps li.on i{background:var(--ice);border-color:var(--ice);box-shadow:0 0 10px rgba(144,187,221,.8)}
+.sc-steps li.now i{border-color:var(--blue-400);animation:ping 1.2s ease-out infinite}
+
+/* Ata: player da sessão + transcrição */
+.sc-ata{grid-template-rows:auto 1fr}
+.sc-player{display:flex;flex-direction:column;gap:6px}
+.sc-file{display:inline-flex;align-items:center;gap:7px;font-weight:500}
+.sc-file i{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--ice);color:#06101C;font-size:7px;font-style:normal}
+.sc-wave{position:relative;display:flex;align-items:center;gap:2px;height:40px;margin-top:16px}
+.sc-wave > i{flex:1;border-radius:2px;background:rgba(216,231,242,.16);transition:background .2s}
+.sc-wave > i.on{background:#90BBDD}
+.sc-head{position:absolute;top:-3px;bottom:-3px;left:0;width:2px;margin-left:-1px;border-radius:2px;background:var(--ice);box-shadow:0 0 10px var(--ice)}
+.sc-pin{position:absolute;top:-17px;translate:-50% 0;padding:1px 6px;border-radius:99px;background:var(--ice);color:#06101C;font-size:8px;font-weight:600;white-space:nowrap}
+.sc-trans{display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.sc-lines{display:flex;flex-direction:column;gap:6px}
+.sc-lines p{margin:0;display:flex;align-items:baseline;gap:7px;white-space:nowrap;overflow:hidden}
+.sc-lines time{flex:none;color:var(--blue-400);font-size:9px;font-variant-numeric:tabular-nums}
+.sc-lines b{flex:none;font-weight:600}
+.sc-lines span{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+
+/* Redação: pedido solto vira documento no modelo */
+.sc-red{grid-template-columns:.85fr 1.3fr;grid-template-rows:minmax(0,1fr);align-items:center}
+.sc-ask{align-self:start;display:flex;flex-direction:column;gap:7px}
+.sc-ask .sc-quote{font-size:10.5px;min-height:0}
+.sc-paper{height:100%;display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:10px;overflow:hidden;background:#F2F7FA;color:#0c1a2a;font-size:10px;line-height:1.5;box-shadow:0 30px 60px -20px #000}
+.sc-kicker{text-align:center;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:#144269}
+.sc-title{text-align:center;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid rgba(20,66,105,.2)}
+.sc-body{margin:2px 0 0;min-height:0;overflow:hidden}
+.sc-paper .typing::after{background:#144269}
+.sc-fix{display:inline-block}
+.sc-fix.bad{text-decoration:underline wavy #c0392b;text-underline-offset:2px}
+.sc-fix.done{padding:0 2px;border-radius:3px;background:rgba(144,187,221,.5)}
+.sc-sk{display:grid;gap:5px}
+.sc-sk i{height:6px;border-radius:3px;transform-origin:left;background:linear-gradient(90deg,rgba(20,66,105,.1),rgba(20,66,105,.25),rgba(20,66,105,.1)) 0 0/200% 100%;animation:flow 2s linear infinite}
+.sc-sk i:nth-child(2){width:86%}
+.sc-sk i:nth-child(3){width:58%}
+.sc-sign{margin-top:auto;align-self:flex-end;width:58%;padding-top:4px;border-top:1px solid rgba(20,66,105,.3);text-align:center;font-size:8px;color:#144269}
+
+/* Assistente: busca na base da Câmara */
+.sc-ast{grid-template-rows:auto auto auto;align-content:center;gap:12px}
+@media(min-width:900px){.sys.full .sc-stage{inset:22px;font-size:11.5px}.sys.full .sc-res{padding:14px}.sys.full .sc-res b{font-size:12px}.sys.full .sc-input{font-size:12.5px}}
+.sc-cmd{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:rgba(6,16,28,.75);border:1px solid rgba(144,187,221,.4);box-shadow:0 0 0 4px rgba(144,187,221,.06)}
+.sc-cmd img{width:16px;height:15px;flex:none}
+.sc-input{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.sc-cmd kbd{font:inherit;font-size:8.5px;padding:2px 6px;border-radius:6px;border:1px solid var(--line);color:var(--muted)}
+.sc-results{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-content:start}
+.sc-res{position:relative;display:flex;flex-direction:column;gap:3px;transition:border-color .3s,box-shadow .3s}
+.sc-k{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-400)}
+.sc-res b{font-size:10.5px;font-weight:500}
+.sc-d{font-size:9.5px;color:var(--muted)}
+.sc-res .sc-chip{align-self:flex-start;margin-top:4px}
+.sc-res.lit{border-color:rgba(144,187,221,.6);box-shadow:0 0 24px -8px rgba(144,187,221,.7)}
+.sc-res.warn .sc-chip{border-color:rgba(242,200,121,.5);color:#F2C879}
+.sc-res.warn.lit{border-color:rgba(242,200,121,.6);box-shadow:0 0 24px -8px rgba(242,200,121,.55)}
+.sc-meter{height:4px;margin-top:6px;border-radius:4px;overflow:hidden;background:rgba(216,231,242,.12)}
+.sc-meter i{display:block;height:100%;transform-origin:left;background:var(--grad-brand)}
+.sc-res em{position:absolute;top:10px;right:12px;font-style:normal;font-size:10px;color:var(--ice);font-variant-numeric:tabular-nums}
+.sc-draft{justify-self:start;display:flex;align-items:center;gap:8px;max-width:58%;padding:7px 12px;border-radius:10px;background:var(--ice);color:#06101C;font-size:10px}
+.sc-draft b{font-weight:600}
+.sc-draft{min-width:0;white-space:nowrap}
+.sc-draft > :last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+/* Celular em pé: tudo empilha */
+@media(max-width:639px) and (orientation:portrait){
+  .sys.card{padding:20px}
+  .sc-stage{inset:12px 12px 52px}
+  .sc-side{gap:10px;justify-content:flex-start}
+  .sc-steps li{white-space:nowrap}
+  .sc-ouv,.sc-red{grid-template-columns:1fr;align-items:start;align-content:center;grid-template-rows:none}
+  .sc-side{flex-direction:row;height:auto}
+  .sc-gauge{width:78px;flex:none}
+  .sc-gtext b{font-size:20px}
+  .sc-results{grid-template-columns:1fr;gap:6px}
+  .sc-ast{gap:7px}
+  .sc-draft{justify-self:stretch}
+  .sc-res{padding:8px 10px}
+  .sc-res .sc-d{display:none}
+  .sc-res em{top:8px}
+  .sc-draft{max-width:100%}
+  .sc-paper{height:auto;min-height:150px}
+}
