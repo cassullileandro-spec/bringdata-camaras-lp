@@ -56,7 +56,11 @@
 @keyframes float{50%{translate:0 -8px}}
 
 /* ---------- Reveal ---------- */
-.motion .reveal{opacity:0;transform:translateY(24px)}
+.motion .reveal:not(.done){opacity:0;translate:0 28px;transition:opacity .7s ease-out var(--d,0s),translate .9s cubic-bezier(.2,.75,.25,1) var(--d,0s)}
+.motion .reveal.in:not(.done){opacity:1;translate:none}
+/* Cards do bento: o card sobe e o conteúdo entra em sequência (só opacity/translate: sem salto no fim) */
+.motion .sys.reveal:not(.done) > *{opacity:0;translate:0 14px;transition:opacity .55s ease-out,translate .7s cubic-bezier(.2,.75,.25,1);transition-delay:calc(var(--d,0s) + .15s + var(--i,0) * .07s)}
+.motion .sys.reveal.in:not(.done) > *{opacity:1;translate:none}
 
 /* ---------- Tela animada do bento + botão do vídeo ---------- */
 .demo{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/10;border:1px solid var(--line);isolation:isolate;margin:4px 0;background:radial-gradient(120% 100% at 80% 0%,#144269 0%,#06101C 45%,#020609 100%);transform-style:preserve-3d}

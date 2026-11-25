@@ -193,9 +193,11 @@
   });
 
   /* ---------- Reveal dos blocos ---------- */
+  $$('.sys.reveal').forEach((c) => [...c.children].forEach((ch, i) => ch.style.setProperty('--i', i)));
   ScrollTrigger.batch('.reveal', {
     start: 'top 96%', once: true,
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.65, stagger: 0.08, ease: 'power2.out', overwrite: true, clearProps: 'transform' }),
+    // Entrada em CSS (.in): antes o clearProps devolvia o translateY do CSS e o card pulava 24px no fim
+    onEnter: (els) => els.forEach((el, i) => { el.style.setProperty('--d', i * 0.08 + 's'); el.classList.add('in'); setTimeout(() => el.classList.add('done'), 1800 + i * 80); }), // done: devolve hover e transições próprias
   });
 
   // 3D tilt com reflexo (transitions.dev) nas telas do bento
