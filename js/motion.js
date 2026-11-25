@@ -183,12 +183,11 @@
     if (h.closest('#hero')) return;
     const words = splitWords(h);
     gsap.set(words, { yPercent: 70, opacity: 0, filter: 'blur(12px)' });
-    const loopTl = wordLoop(words, 6);
     ScrollTrigger.create({
       trigger: h, start: 'top 85%', once: true,
       onEnter: () => gsap.to(words, {
         yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 0.9, stagger: 0.05, ease: 'power3.out',
-        onComplete: () => whileVisible(h, loopTl),
+        clearProps: 'filter', // sem loop: título que some e volta parece quebrado para quem está lendo
       }),
     });
   });
@@ -213,9 +212,10 @@
   });
 
   /* ---------- Prazos: curva desenha, dias rolam no tambor e enchem o calendário ---------- */
+  // Revela uma vez ao entrar (preso à rolagem, a curva ficava cortada com borda reta quando a pessoa parava)
   gsap.fromTo('.deadline .art', { clipPath: 'inset(0 100% 0 0)' }, {
-    clipPath: 'inset(0 0% 0 0)', ease: 'none',
-    scrollTrigger: { trigger: '#prazos', start: 'top 80%', end: 'center 45%', scrub: 1 },
+    clipPath: 'inset(0 0% 0 0)', duration: 1.6, ease: 'power2.inOut',
+    scrollTrigger: { trigger: '#prazos', start: 'top 75%', once: true },
   });
   // Spinning counter (transitions.dev): cada dígito é um tambor de 0 a 9
   const drums = $$('[data-count]').map((b) => {
