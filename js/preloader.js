@@ -40,7 +40,6 @@ let finished = false;
 const finish = () => {
   if (finished) return;
   finished = true;
-  try { sessionStorage.setItem('bdSeen', '1'); } catch (e) { /* modo privado: tudo bem */ }
   root.classList.add('out');
   document.documentElement.classList.remove('pl-on');
   done();
@@ -51,7 +50,7 @@ root.addEventListener('click', finish);
 const simple = () => { root.classList.add('simple'); setTimeout(finish, 1400); };
 if (matchMedia('(prefers-reduced-motion: reduce)').matches) { simple(); return; }
 
-const TEX = 1024;          // logo texture size
+const TEX = 512;           // logo texture size
 const BOX = 0.75;          // fraction of the texture the logo box fills (the rest is room for the SDF)
 
 function loadImage(src) {
