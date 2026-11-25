@@ -12,6 +12,7 @@
 <script>
   // Esconde os estados iniciais só quando a animação vai rodar; se o GSAP não carregar, a página aparece inteira.
   document.documentElement.classList.add('pl-on'); // pré-carregamento em todo carregamento
+  if('scrollRestoration' in history) history.scrollRestoration='manual'; // depois do preloader, sempre a hero
   if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('motion');setTimeout(()=>{if(!window.gsap)document.documentElement.classList.remove('motion')},3000)}
 </script>
 <style>
