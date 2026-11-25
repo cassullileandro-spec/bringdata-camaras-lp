@@ -51,7 +51,8 @@ h3{font-size:20px;letter-spacing:-.02em}
 .btn-dark:hover{transform:translateY(-2px);background:var(--navy-700)}
 
 .nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
-.nav.scrolled{background:rgba(0,0,0,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+/* sem backdrop-filter: o desfoque do menu fixo refazia a cada quadro da rolagem e travava a página */
+.nav.scrolled{background:rgba(2,6,9,.94);border-color:var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px;gap:24px}
 .nav .logo{flex:none}
 .nav .logo img{height:26px;width:auto;max-width:none}
@@ -183,12 +184,12 @@ footer{position:relative;padding:90px 0 36px;border-top:1px solid var(--line);fo
 .wa:hover{transform:scale(1.07)}
 .wa svg{width:26px;height:26px}
 </style>
-<link rel="stylesheet" href="css/motion.css?v=20">
-<link rel="stylesheet" href="css/scenes.css?v=20">
+<link rel="stylesheet" href="css/motion.css?v=21">
+<link rel="stylesheet" href="css/scenes.css?v=21">
 </head>
 <body id="top">
 <div id="preloader" data-logo="assets/icone-azul-claro.svg" aria-hidden="true"><canvas></canvas><img src="assets/icone-azul-claro.svg" alt="" width="64" height="60"></div>
-<script src="js/preloader.js?v=20"></script>
+<script src="js/preloader.js?v=21"></script>
 
 <header class="nav" id="nav">
   <div class="wrap">
@@ -464,9 +465,9 @@ footer{position:relative;padding:90px 0 36px;border-top:1px solid var(--line);fo
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-<script src="js/ribbon.js?v=20" defer></script>
-<script src="js/scenes.js?v=20" defer></script>
-<script src="js/covers.js?v=20" defer></script>
-<script src="js/motion.js?v=20" defer></script>
+<script src="js/ribbon.js?v=21" defer></script>
+<script src="js/scenes.js?v=21" defer></script>
+<script src="js/covers.js?v=21" defer></script>
+<script src="js/motion.js?v=21" defer></script>
 </body>
 </html>
